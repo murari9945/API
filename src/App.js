@@ -5,11 +5,18 @@ import './App.css';
 
 function App() {
   const [movies,setMovies]=useState([]);
-  const [isLoading,setLoading]=useState(false)
+  const [isLoading,setLoading]=useState(false);
+  const [error,setError]=useState(null);
  async function movieFetchHandler(){
   setLoading(true);
-  const response= await fetch('https://swapi.dev/api/films')
+  setError(null);
+  try{
+ const response= await fetch('https://swapi.dev/api/films')
+  if(!response.ok){
+    throw new Error('something went wrong ....RETRYING');
+  }
   const data =await response.json()
+  
   const getMovies=data.results.map((movieData)=>{
     return{
       id:movieData.episode_id,
@@ -19,7 +26,11 @@ function App() {
     }
   });
   setMovies(getMovies);
-  setLoading(false);
+  
+  } catch(error){
+setError(error.message);
+  }
+ setLoading(false);
 
   }
 
@@ -32,6 +43,7 @@ function App() {
        { !isLoading && movies.length>0 && <MoviesList movies={movies} />}
        {!isLoading && movies.length ===0 && <p>no movies</p>}
        {isLoading && <p>loading</p>}
+       {!isLoading && error && <p>{error}</p>}
       </section>
     </React.Fragment>
   );
