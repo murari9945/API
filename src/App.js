@@ -1,5 +1,5 @@
 import React, { useState,useEffect,useCallback } from 'react';
-
+import FormInput from './components/FormInput';
 import MoviesList from './components/MoviesList';
 import './App.css';
 
@@ -7,6 +7,7 @@ function App() {
   const [movies,setMovies]=useState([]);
   const [isLoading,setLoading]=useState(false);
   const [error,setError]=useState(null);
+ 
   const movieFetchHandler= useCallback(async function movieFetchHandler(){
     setLoading(true);
     setError(null);
@@ -37,10 +38,14 @@ function App() {
    useEffect(() => {
     movieFetchHandler();
   }, [movieFetchHandler]);
+  function addMovieHandler(movie) {
+    console.log(movie);
+  }
 
 
   return (
     <React.Fragment>
+      <section style={{display:'flex',justifyContent:'center'}}><FormInput onAddMovie={addMovieHandler}/></section>
       <section>
         <button onClick={movieFetchHandler}>Fetch Movies</button>
       </section>
